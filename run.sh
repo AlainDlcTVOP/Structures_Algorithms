@@ -1,0 +1,1 @@
+clear && mkdir -p build && rm -rf ./build/* && gcc ./lib/stack/stack.c ./test/test.c -I./lib/stack -lunity -o ./build/test && ./build/test
