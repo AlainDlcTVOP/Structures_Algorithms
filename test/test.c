@@ -1,19 +1,23 @@
 #include <unity.h>
 #include <stack.h>
-
+#include <stdint.h>
 #ifdef TEENSY
 #include <ioport.h>
 #include <Arduino.h>
 #endif
 
-static volatile uint8_t *leds_address = NULL;
-
+Stack sp;
 void setUp(void)
 {
 }
 
 void tearDown(void)
 {
+}
+
+void test_init()
+{
+    TEST_ASSERT_EQUAL_UINT8(sp.top, init(sp.top));
 }
 
 #ifdef TEENSY
@@ -30,9 +34,10 @@ int main(void)
 
 #endif
     UNITY_BEGIN();
-
+    RUN_TEST(test_init);
 #ifdef TEENSY
     UNITY_END();
+
 #else
     return UNITY_END();
 #endif

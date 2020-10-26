@@ -13,14 +13,15 @@
 
 #define SIZE 5
 #include <stdlib.h>
+#include <stdint.h>
 typedef struct
 {
-    int item[SIZE];
-    int top;
+    uint8_t item[SIZE];
+    uint8_t top;
 } Stack;
 
-void push(Stack *, int);
-int pop(Stack *);
+void push(Stack *, uint8_t);
+uint8_t pop(Stack *);
 void init(Stack *);
 
 #endif /* STACK_H */
