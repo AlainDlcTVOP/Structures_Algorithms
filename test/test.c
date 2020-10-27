@@ -2,8 +2,7 @@
 #include <stack.h>
 #include <stdint.h>
 #ifdef TEENSY
-#include <ioport.h>
-#include <Arduino.h>
+
 #endif
 
 Stack sp;

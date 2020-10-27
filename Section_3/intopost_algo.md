@@ -1,0 +1,32 @@
+# Arrays:
+    infix - to hold the infix string,
+    postfix - to hold the postfix string, initially empty
+
+# Other Data structures:
+    OperatorStack. top is initialzed and push and pop operation works on this.
+
+# ALGORITHM
+
+WHILE NOT END OF THE INFIX STRING:
+    TOKEN = GET THE NEXT ELEMENT FROM INFIX STRING
+    IF TOKEN IS AN OPERAND THEN
+        APPEND TOKEN WITH POSTFIX STRING
+    ELSE IF TOKEN IS A OPERATOR THEN
+        WHILE NOT EMPTY OPERATORSTACK AND PRCD(STACKTOP, TOKEN):
+            TOP_OPERATOR = POP(OPERATORSTACK)
+            APPEND TOP_OPERATOR WITH THE POSTFIX STRING
+        END WHILE
+        IF TOKEN = ')' THEN
+            POP(OPERATORSTACK)
+        ELSE
+            PUSH(TOP_OPERATOR, TOKEN)
+        END IF
+    END IF
+END WHILE
+
+WHILE NOT EMPTY OPERATORSTACK:
+    TOP_OPERATOR = POP(OPERATORSTACK)
+    APPEND TOP_OPERATOR  WITH THE POSTFIX STRING
+END WHILE
+
+PRINT POSTFIX
