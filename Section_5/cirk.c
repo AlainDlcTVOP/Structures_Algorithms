@@ -58,19 +58,19 @@ int main()
 }
 void initQueue(Queue *qp)
 {
-    qp->front = 0;
-    qp->rear = 0;
+    qp->front = SIZE - 1;
+    qp->rear = SIZE - 1;
 }
 
 void enqueue(Queue *qp, int v)
 {
-    if (qp->rear == SIZE)
+    if ((qp->rear + 1) % SIZE == qp->front)
     {
         printf("Queue Overflow\n");
         return;
     }
+    qp->rear = (qp->rear + 1) % SIZE;
     qp->item[qp->rear] = v;
-    qp->rear += 1;
 }
 
 int dequeue(Queue *qp)
@@ -79,8 +79,9 @@ int dequeue(Queue *qp)
     {
         return -9999;
     }
+    qp->front = (qp->front + 1) % SIZE;
     int v = qp->item[qp->front];
-    qp->front += 1;
+
     return v;
 }
 void menu()
