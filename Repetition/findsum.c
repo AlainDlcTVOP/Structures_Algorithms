@@ -3,7 +3,7 @@
 int get_sum(int n);
 int main(int argc, char const *argv[])
 {
-    printf("sum %d\n", get_sum(25));
+    printf("sum %d\n", get_sum(12));
     return 0;
 }
 int get_sum(int n)

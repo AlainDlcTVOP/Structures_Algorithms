@@ -138,24 +138,132 @@ void printList(LinkedList *lstPtr)
     }
 }
 
+Node *find(LinkedList *lstPtr, int target, Node **prvPtr)
+{
+
+    Node *current = lstPtr->head;
+    *prvPtr = NULL;
+    while (current != NULL)
+    {
+
+        if (current->data == target)
+        {
+            break;
+        }
+        *prvPtr = current;
+        current = current->next;
+    }
+    return current;
+}
+
+int deleteTarget(LinkedList *lstPtr, int target)
+{
+    Node *current = NULL, *prev = NULL;
+    current = find(lstPtr, target, &prev);
+
+    if (current == NULL)
+    {
+        return -9999;
+    }
+    int data = current->data;
+    if (current == lstPtr->head)
+    {
+        // if the target is the first Node
+        return deleteFirst(lstPtr);
+    }
+    else if (current == lstPtr->tail)
+    {
+        return deleteLast(lstPtr);
+    }
+    else
+    {
+
+        prev->next = current->next;
+        free(current);
+        lstPtr->nodeCount--;
+        return data;
+    }
+}
+
+int loadFromFile(LinkedList *lstPtr, char *fileName)
+{
+    FILE *inputFile = fopen(fileName, "r");
+    if (inputFile == NULL)
+    {
+        return 0;
+    }
+    int data;
+    fscanf(inputFile, "%d", &data);
+    while (!feof(inputFile))
+    {
+        insertAtTail(lstPtr, data);
+        fscanf(inputFile, "%d", &data);
+    }
+    fclose(inputFile);
+    return 1;
+}
+void createListFromRandomNumbers(LinkedList *lstPtr, int n)
+{
+    int i;
+    srand(time(NULL));
+
+    for (i = 1; i <= n; ++i)
+    {
+        int k = rand() % 1000;
+        insertAtTail(lstPtr, k);
+    }
+}
+
+int deleteFirst(LinkedList *lstPtr)
+{
+    if (lstPtr->nodeCount == 0)
+    {
+        return -9999;
+    }
+    Node *first = lstPtr->head;
+    int data = first->data;
+    if (lstPtr->nodeCount == 1)
+    { //only one node
+        lstPtr->head = NULL;
+        lstPtr->tail = NULL;
+    }
+    else
+    {
+        //there are many nodes and we need to delete the first
+        lstPtr->head = first->next;
+    }
+    free(first);
+    lstPtr->nodeCount--;
+    return data;
+}
+
+int deleteLast(LinkedList *lstPtr)
+{
+}
+
+void reverse(LinkedList *lstPtr)
+{
+}
+
 void menu()
 {
     printf("    Singly Linked List Operations\n");
     printf("----------------------------------------\n");
-    printf("1. Load from file\n");         // load integer data from file and will create the list
-                                           // by using insert_at_tail operation (menu option 3)
-    printf("2. Insert at head\n");         // inserting a new node as the first node
-    printf("3. Insert at tail\n");         // inserting a new node as the last node
-    printf("4. Print List (detail)\n");    // printing the linked list in details,
+    printf("1. Load from file\n"); // load integer data from file and will create the list
+                                   // by using insert_at_tail operation (menu option 3)
+    printf("2. Create list with random numbers\n");
+    printf("3. Insert at head\n");         // inserting a new node as the first node
+    printf("4. Insert at tail\n");         // inserting a new node as the last node
+    printf("5. Print List (detail)\n");    // printing the linked list in details,
                                            // including the data and pointer in each node
-    printf("5. Print List (data only)\n"); // prints the integer data in each node
-    printf("6. Find\n");                   // finds if an integer exisits in a node from
+    printf("6. Print List (data only)\n"); // prints the integer data in each node
+    printf("7. Find\n");                   // finds if an integer exisits in a node from
                                            // the start in the list
-    printf("7. Delete first\n");           // deletes the first node
-    printf("8. Delete last\n");            // deletes the last node
-    printf("9. Delete a target node\n");   // deletes a particular node, if that exists
-    printf("10.Reverse\n");                // will physically reverse the list
-    printf("11. Quit\n");                  // to terminate each node
+    printf("8. Delete first\n");           // deletes the first node
+    printf("9. Delete last\n");            // deletes the last node
+    printf("10. Delete a target node\n");  // deletes a particular node, if that exists
+    printf("11.Reverse\n");                // will physically reverse the list
+    printf("12. Quit\n");                  // to terminate each node
 }
 
 int main()
@@ -176,43 +284,61 @@ int main()
         switch (choice)
         {
         case 1:
-            printf("Will be implemented in next lectures of the section 7.\n");
+            success = loadFromFile(&list, "data.txt");
+            if (success == 1)
+                printf("File has been loaded successfully\n");
+            else
+                printf("There was some error while loading and creating the list\n");
             break;
-
         case 2:
+            printf("Enter number of integers to be generated and added into the list: ");
+            scanf("%d", &n);
+            createListFromRandomNumbers(&list, n);
+            break;
+        case 3:
             // ask to input
             printf("Input data to insert at head (as first node): ");
             scanf("%d", &data);
             insertAtHead(&list, data);
 
             break;
-        case 3:
+        case 4:
             printf("Input data to insert at tail (as last node): ");
             scanf("%d", &data);
             insertAtTail(&list, data);
             break;
-        case 4:
+        case 5:
             printListDetail(&list);
             break;
-        case 5:
+        case 6:
             printList(&list);
             break;
-        case 6:
-            printf("Will be implemented in next lectures of the section 7.\n");
-            break;
         case 7:
-            printf("Will be implemented in next lectures of the section 7.\n");
+            printf("Not implement yet: ");
+
             break;
         case 8:
-            printf("Will be implemented in next lectures of the section 7.\n");
+            data = deleteFirst(&list);
+            if (data == -9999)
+            {
+                printf("Linkedlist is empty\n");
+            }
+            else
+            {
+                printf("First node has been deleted, data: %d\n", data);
+            }
             break;
         case 9:
-            printf("Will be implemented in next lectures of the section 7.\n");
+            printf("Not implement yet: ");
             break;
         case 10:
-            printf("Will be implemented in next lectures of the section 7.\n");
+            printf("Not implement yet: ");
+
             break;
         case 11:
+            printf("Not implement yet: ");
+            break;
+        case 12:
             quit = 1;
             break;
         default:
