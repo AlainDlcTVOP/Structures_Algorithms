@@ -1,3 +1,13 @@
+/**
+ * @file linklist.c
+ * @author Alain (AlainDlcTVOP)
+ * @brief linklist with all functions implement
+ * @version 0.1
+ * @date 2020-12-10
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -222,14 +232,16 @@ int deleteFirst(LinkedList *lstPtr)
     }
     Node *first = lstPtr->head;
     int data = first->data;
+
     if (lstPtr->nodeCount == 1)
-    { //only one node
+    {
+        // there is only one node
         lstPtr->head = NULL;
         lstPtr->tail = NULL;
     }
     else
     {
-        //there are many nodes and we need to delete the first
+        // there are many nodes and we need to delete the first
         lstPtr->head = first->next;
     }
     free(first);
@@ -239,10 +251,64 @@ int deleteFirst(LinkedList *lstPtr)
 
 int deleteLast(LinkedList *lstPtr)
 {
+    // if linked list is empty
+    if (lstPtr->nodeCount == 0)
+    {
+        return -9999; // returning absurd value to caller
+    }
+
+    Node *current = lstPtr->head;
+    Node *last = lstPtr->tail;
+    int data = last->data;
+
+    if (lstPtr->nodeCount == 1)
+    {
+        // if there is only one node, then we need to delete that node,
+        // so we must assign NULL to both head and tail pointer, as the
+        // linked list would be empty after this operation.
+        lstPtr->head = NULL;
+        lstPtr->tail = NULL;
+    }
+    else
+    {
+        // there are many nodes and we need to search for the second last node and
+        // assign that to tail.
+        while (current->next != lstPtr->tail)
+        {
+            current = current->next;
+        }
+        lstPtr->tail = current;
+        lstPtr->tail->next = NULL;
+    }
+    free(last);
+    lstPtr->nodeCount--;
+    return data;
 }
 
 void reverse(LinkedList *lstPtr)
 {
+    if (lstPtr->nodeCount <= 1)
+    {
+        return;
+    }
+    Node *p, *q, *r;
+    // p is current Node pointer for doing reversal
+    q = NULL;
+    p = lstPtr->head;
+    r = p->next;
+    while (1)
+    {
+        // reverse the link
+        p->next = q;
+        if (p == lstPtr->tail)
+            break;
+        // shift the pointers towards right
+        q = p;
+        p = r;
+        r = r->next;
+    }
+    lstPtr->tail = lstPtr->head;
+    lstPtr->head = p;
 }
 
 void menu()
@@ -314,8 +380,17 @@ int main()
             printList(&list);
             break;
         case 7:
-            printf("Not implement yet: ");
-
+            printf("Enter target to find: ");
+            scanf("%d", &data);
+            current = find(&list, data, &prev);
+            if (current == NULL)
+            {
+                printf("Target not found in the Linkedlist\n");
+            }
+            else
+            {
+                printf("Target node exists, address of the target node: %p, previous: %p\n", current, prev);
+            }
             break;
         case 8:
             data = deleteFirst(&list);
@@ -329,14 +404,32 @@ int main()
             }
             break;
         case 9:
-            printf("Not implement yet: ");
-            break;
-        case 10:
-            printf("Not implement yet: ");
+            data = deleteLast(&list);
+            if (data == -9999)
+            {
+                printf("Linkedlist is empty\n");
+            }
+            else
+            {
+                printf("Last node has been deleted, data: %d\n", data);
+            }
 
             break;
+        case 10:
+            printf("Enter target to find: ");
+            scanf("%d", &target);
+            data = deleteTarget(&list, target);
+            if (data == -9999)
+            {
+                printf("Target %d does not exists in the list\n", target);
+            }
+            else
+            {
+                printf("Target node with data: %d, deleted successfully\n", data);
+            }
+            break;
         case 11:
-            printf("Not implement yet: ");
+            reverse(&list);
             break;
         case 12:
             quit = 1;
