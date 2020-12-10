@@ -9,6 +9,9 @@
  * @copyright Copyright (c) 2020
  * 
  */
+=======
+#include <stdio.h>
+
 #include <math.h>
 
 void menu();
