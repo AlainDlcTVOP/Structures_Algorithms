@@ -318,36 +318,192 @@ void addFirst(DblList *lstPtr, int data)
 
 void addLast(DblList *lstPtr, int data)
 {
+    Node *p = (Node *)malloc(sizeof(Node));
+
+    if (p == NULL)
+    {
+        printf("Unable to create node for the double linked list\n");
+        return;
+    }
+    p->data = data;
+    p->next = p->prev = NULL;
+    if (lstPtr->nodeCount == 0)
+    {
+        lstPtr->head = lstPtr->tail = p;
+    }
+    else
+    {
+        lstPtr->tail->next = p;
+        p->prev = lstPtr->tail;
+        lstPtr->tail = p;
+    }
+    lstPtr->nodeCount++;
 }
 
 void printForward(DblList *lstPtr)
 {
+    Node *p = lstPtr->head;
+    if (p == NULL)
+    {
+        printf("LinkedList is empty\n");
+        return;
+    }
+    printf("Content of the double LinkedList\n");
+    while (p != NULL)
+    {
+        printf("%4d", p->data);
+        p = p->next;
+    }
+    printf("\n-- END --\n");
 }
 
 void printReverse(DblList *lstPtr)
 {
+    Node *p = lstPtr->tail;
+    if (p == NULL)
+    {
+        printf("LinkedList is empty\n");
+        return;
+    }
+    printf("Content of the double LinkedList in the reverse\n");
+    while (p != NULL)
+    {
+        printf("%4d", p->data);
+        p = p->prev;
+    }
+    printf("\n-- END --n");
 }
 
 Node *find(DblList *lstPtr, int target)
 {
+    Node *p;
+    for (p = lstPtr->head; p != NULL; p = p->next)
+    {
+        if (p->data == target)
+        {
+            return p;
+        }
+    }
+    return NULL;
 }
 
 int insertAfter(DblList *lstPtr, int target, int data)
 {
+    Node *p = find(lstPtr, target);
+    if (p == NULL)
+    {
+        return 0;
+    }
+    if (p == lstPtr->tail)
+    {
+        addLast(lstPtr, data);
+    }
+    else
+    {
+        Node *q = (Node *)malloc(sizeof(Node));
+        q->data = data;
+        if (q == NULL)
+        {
+            printf("Unable to create node \n");
+            return 0;
+        }
+        q->next = p->next;
+        q->prev = p;
+        p->next = q;
+        q->next->prev = q;
+    }
+
+    lstPtr->nodeCount++;
+
+    return 1;
 }
 
 int insertBefore(DblList *lstPtr, int target, int data)
 {
+    Node *p = find(lstPtr, target);
+    if (p == NULL)
+    {
+        return 0;
+    }
+    if (p == lstPtr->tail)
+    {
+        addFirst(lstPtr, data);
+    }
+    else
+    {
+        Node *q = (Node *)malloc(sizeof(Node));
+        q->data = data;
+        if (q == NULL)
+        {
+            printf("Unable to create node \n");
+            return 0;
+        }
+        q->prev = p->prev;
+        q->next = p;
+        p->prev = q;
+        q->prev->next = q;
+    }
+
+    lstPtr->nodeCount++;
+
+    return 1;
 }
 
 int deleteFirst(DblList *lstPtr)
 {
+    if (lstPtr->nodeCount == 0)
+        return 0;
+    Node *p = lstPtr->head;
+    if (lstPtr->nodeCount == 1)
+    {
+        lstPtr->head = lstPtr->tail = NULL;
+    }
+    else
+    {
+        lstPtr->head = lstPtr->head->next;
+        lstPtr->head->prev = NULL;
+    }
+    free(p);
+    lstPtr->nodeCount++;
+
+    return 1;
 }
 
 int deleteLast(DblList *lstPtr)
 {
+    if (lstPtr->nodeCount == 0)
+        return 0;
+    Node *p = lstPtr->tail;
+    if (lstPtr->nodeCount == 1)
+    {
+        lstPtr->head = lstPtr->tail = NULL;
+    }
+    else
+    {
+        lstPtr->tail = lstPtr->tail->prev;
+        lstPtr->tail->next = NULL;
+    }
+    free(p);
+    lstPtr->nodeCount++;
+
+    return 1;
 }
 
 int deleteTarget(DblList *lstPtr, int target)
 {
+    Node *p = find(lstPtr, target);
+    if (p == NULL)
+        return 0;
+    if (p == lstPtr->head)
+        deleteFirst(lstPtr);
+    else if (p == lstPtr->tail)
+        deleteLast(lstPtr);
+    else
+    {
+        p->next->prev = p->prev;
+        p->prev->next = p->next;
+        free(p);
+        lstPtr->nodeCount++;
+        return 1;
+    }
 }
